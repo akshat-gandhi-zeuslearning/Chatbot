@@ -1,15 +1,15 @@
 import streamlit as st
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from langchain_community.retrievers import BM25Retriever
 from langchain.docstore.document import Document
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI  # Assuming this is used elsewhere
 from langchain.retrievers.ensemble import EnsembleRetriever
 from dotenv import load_dotenv
 import os
+from sentence_transformers import SentenceTransformer
 
 # Load environment variables
 load_dotenv()
@@ -26,13 +26,14 @@ def get_text_chunks(text):
 
 # Function to create and save a vector store from text chunks
 def get_vector_store(text_chunks):
-    embeddings = OpenAIEmbeddings()
+    
+    embeddings = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
 
 # Function to create a conversational chain with memory
 def get_conversational_chain():
-    # Updated prompt template
+    # Updated prompt template 
     prompt_template = """
     If the response can have a link to any webpage in the embeddings, include the clickable link with context.
 
@@ -54,7 +55,7 @@ def get_conversational_chain():
 
 # Function to handle user input and process the question
 def user_input(user_question, chunks):
-    embeddings = OpenAIEmbeddings()
+    embeddings = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
     vector_store = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     vector_retriever = vector_store.as_retriever(search_kwargs={"k": 5})
 

@@ -24,8 +24,8 @@ class BatchSpider(scrapy.Spider):
         os.makedirs('output', exist_ok=True)
         
         # Clear existing files if they exist
-        # with open(self.urls_anchors_filename, 'w', encoding='utf-8') as f:
-        #     f.write('')
+        with open(self.urls_anchors_filename, 'w', encoding='utf-8') as f:
+            f.write('')
         with open(self.text_filename, 'w', encoding='utf-8') as f:
             f.write('')
 
@@ -71,13 +71,10 @@ class BatchSpider(scrapy.Spider):
         text_content = soup.get_text(separator="\n", strip=True)
 
         # Save anchors
-        # with open(self.urls_anchors_filename, 'a', encoding='utf-8') as f:
-        #     f.write(f"Page URL: {url}\n")
-        #     for anchor in anchors:
-        #         href = anchor.get('href', 'No URL')
-        #         text = anchor.get_text(strip=True)
-        #         f.write(f"URL: {href}\nAnchor Text: {text}\n")
-        #     f.write("\n")
+        with open(self.urls_anchors_filename, 'a', encoding='utf-8') as f:
+            f.write(f"Page URL: {url}\n")
+            
+            f.write("\n")
 
         # Save text content
         with open(self.text_filename, 'a', encoding='utf-8') as f:
